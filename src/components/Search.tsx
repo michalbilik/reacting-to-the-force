@@ -1,25 +1,24 @@
-// components/Search.tsx
-import React from "react";
-import { useAppSelector, useAppDispatch } from "../store/hooks";
-import { setPeople } from "../store/slices/searchSlice";
-import { fetchPerson, IPeople } from "../api";
+// src/components/Search.tsx
+import React, { useState } from "react";
+import { useSearchPeopleQuery } from "../starWarsApi";
 import SearchInput from "./SearchInput";
 import SearchResults from "./SearchResults";
 
 const Search = () => {
-  const searchTerm = useAppSelector((state) => state.search.searchTerm);
-  const people = useAppSelector((state) => state.search.people);
-  const dispatch = useAppDispatch();
-
-  const handleSearch = async () => {
-    const fetchedPeople = await fetchPerson(searchTerm);
-    dispatch(setPeople(fetchedPeople));
-  };
+  const [searchTerm, setSearchTerm] = useState("");
+  const { data: people, error, isLoading } = useSearchPeopleQuery(searchTerm);
+  const handleSearch = () => {};
 
   return (
     <div>
-      <SearchInput onSearch={handleSearch} />
-      <SearchResults people={people} />
+      <SearchInput
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        onSearch={handleSearch}
+      />
+      {isLoading && <p>Loading...</p>}
+      {error && <p>An error occurred</p>}
+      {people && <SearchResults people={people} />}
     </div>
   );
 };
