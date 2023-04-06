@@ -15,6 +15,7 @@ const PersonDetails: React.FC = () => {
   const [peopleDetails, setPeopleDetails] = useState<IPeopleDetails | null>(
     null
   );
+  const [loading, setLoading] = useState<boolean>(true);
 
   const goBack = () => {
     navigate(-1);
@@ -25,11 +26,17 @@ const PersonDetails: React.FC = () => {
       if (!selectedPerson) {
         return;
       }
+      setLoading(true);
       const details = await fetchPeopleDetails(selectedPerson);
       setPeopleDetails(details);
+      setLoading(false);
     };
     fetchDetails();
   }, [selectedPerson]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   if (!selectedPerson || !peopleDetails) {
     return <div>No person selected</div>;

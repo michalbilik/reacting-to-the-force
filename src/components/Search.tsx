@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useAppSelector, useAppDispatch } from "./../store/hooks";
 import {
   setSearchTerm,
@@ -13,11 +13,14 @@ const Search = () => {
   const people = useAppSelector((state) => state.search.people);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = useCallback(async () => {
     if (searchTerm.trim() === "") return;
 
+    setIsLoading(true);
     const fetchedPeople = await fetchPerson(searchTerm);
+    setIsLoading(false);
     dispatch(setPeople(fetchedPeople));
   }, [searchTerm, dispatch]);
 
@@ -53,15 +56,19 @@ const Search = () => {
         </div>
       </div>
 
-      {people.map((person) => (
-        <div
-          key={person.name}
-          onClick={() => handlePersonClick(person)}
-          className="cursor-pointer"
-        >
-          <h3>{person.name}</h3>
-        </div>
-      ))}
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : (
+        people.map((person) => (
+          <div
+            key={person.name}
+            onClick={() => handlePersonClick(person)}
+            className="cursor-pointer"
+          >
+            <h3>{person.name}</h3>
+          </div>
+        ))
+      )}
     </div>
   );
 };
