@@ -1,21 +1,18 @@
-// components/Search.tsx
 import React from "react";
 import { useAppSelector, useAppDispatch } from "./../store/hooks";
 import {
   setSearchTerm,
   setPeople,
   setSelectedPerson,
-  toggleOverlay,
 } from "./../store/slices/searchSlice";
 import { fetchPerson, IPeople } from "../api";
-import PersonDetailsOverlay from "./PersonDetailsOverlay";
+import { useNavigate } from "react-router-dom";
 
 const Search = () => {
   const searchTerm = useAppSelector((state) => state.search.searchTerm);
   const people = useAppSelector((state) => state.search.people);
-  const selectedPerson = useAppSelector((state) => state.search.selectedPerson);
-  const isOverlayOpen = useAppSelector((state) => state.search.isOverlayOpen);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleSearch = async () => {
     const fetchedPeople = await fetchPerson(searchTerm);
@@ -24,11 +21,7 @@ const Search = () => {
 
   const handlePersonClick = (person: IPeople) => {
     dispatch(setSelectedPerson(person));
-    dispatch(toggleOverlay());
-  };
-
-  const closeOverlay = () => {
-    dispatch(toggleOverlay());
+    navigate(`/person/${person.name}`);
   };
 
   return (
@@ -46,10 +39,6 @@ const Search = () => {
           <h3>{person.name}</h3>
         </div>
       ))}
-
-      {isOverlayOpen && selectedPerson && (
-        <PersonDetailsOverlay person={selectedPerson} onClose={closeOverlay} />
-      )}
     </div>
   );
 };
