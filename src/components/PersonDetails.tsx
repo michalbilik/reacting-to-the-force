@@ -16,7 +16,6 @@ const PersonDetails: React.FC = () => {
       <h2>{selectedPerson.name}</h2>
       <p>Birth year: {selectedPerson.birth_year}</p>
       <p>Homeworld: {selectedPerson.homeworld}</p>
-      {/* Render other details */}
     </div>
   );
 };
