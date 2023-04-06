@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppSelector } from "../store/hooks";
-import { IPeople } from "../api";
+import { IPeople } from "../api/api";
 import { useNavigate } from "react-router-dom";
 
 const PersonDetails: React.FC = () => {
@@ -22,6 +22,10 @@ const PersonDetails: React.FC = () => {
       <h2>{selectedPerson.name}</h2>
       <p>Birth year: {selectedPerson.birth_year}</p>
       <p>Homeworld: {selectedPerson.homeworld}</p>
+      <p>Movies: {selectedPerson.films}</p>
+      <p>Starships: {selectedPerson.starships}</p>
+      <p>Vehicles: {selectedPerson.vehicles}</p>
+
       <button
         onClick={goBack}
         className="px-4 py-2 text-white bg-blue-500 rounded-r hover:bg-blue-600"

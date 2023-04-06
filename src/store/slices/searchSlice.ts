@@ -1,6 +1,6 @@
 // store/slices/searchSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IPeople } from "../../api";
+import { IPeople } from "../../api/api";
 
 interface SearchState {
   searchTerm: string;

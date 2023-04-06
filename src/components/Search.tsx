@@ -5,7 +5,7 @@ import {
   setPeople,
   setSelectedPerson,
 } from "./../store/slices/searchSlice";
-import { fetchPerson, IPeople } from "../api";
+import { fetchPerson, IPeople } from "../api/api";
 import { useNavigate } from "react-router-dom";
 
 const Search = () => {
