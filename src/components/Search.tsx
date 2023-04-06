@@ -1,42 +1,55 @@
-<<<<<<< HEAD
-// src/components/Search.tsx
-import React, { useState } from "react";
-import { useSearchPeopleQuery } from "../starWarsApi";
-=======
+// components/Search.tsx
 import React from "react";
-import { useAppSelector, useAppDispatch } from "../store/hooks";
-import { setPeople } from "../store/slices/searchSlice";
+import { useAppSelector, useAppDispatch } from "./../store/hooks";
+import {
+  setSearchTerm,
+  setPeople,
+  setSelectedPerson,
+  toggleOverlay,
+} from "./../store/slices/searchSlice";
 import { fetchPerson, IPeople } from "../api";
->>>>>>> parent of 28bce78 (Incorrect hook call fix :))
-import SearchInput from "./SearchInput";
-import SearchResults from "./SearchResults";
+import PersonDetailsOverlay from "./PersonDetailsOverlay";
 
 const Search = () => {
-<<<<<<< HEAD
-  const [searchTerm, setSearchTerm] = useState("");
-  const { data: people, error, isLoading } = useSearchPeopleQuery(searchTerm);
-  const handleSearch = () => {};
-=======
+  const searchTerm = useAppSelector((state) => state.search.searchTerm);
   const people = useAppSelector((state) => state.search.people);
+  const selectedPerson = useAppSelector((state) => state.search.selectedPerson);
+  const isOverlayOpen = useAppSelector((state) => state.search.isOverlayOpen);
   const dispatch = useAppDispatch();
 
   const handleSearch = async () => {
-    const searchTerm = useAppSelector((state) => state.search.searchTerm);
     const fetchedPeople = await fetchPerson(searchTerm);
     dispatch(setPeople(fetchedPeople));
   };
->>>>>>> parent of 28bce78 (Incorrect hook call fix :))
+
+  const handlePersonClick = (person: IPeople) => {
+    dispatch(setSelectedPerson(person));
+    dispatch(toggleOverlay());
+  };
+
+  const closeOverlay = () => {
+    dispatch(toggleOverlay());
+  };
 
   return (
     <div>
-      <SearchInput
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        onSearch={handleSearch}
+      <input
+        type="text"
+        value={searchTerm}
+        onChange={(e) => dispatch(setSearchTerm(e.target.value))}
+        placeholder="Search for a Star Wars character"
       />
-      {isLoading && <p>Loading...</p>}
-      {error && <p>An error occurred</p>}
-      {people && <SearchResults people={people} />}
+      <button onClick={handleSearch}>Search</button>
+
+      {people.map((person) => (
+        <div key={person.name} onClick={() => handlePersonClick(person)}>
+          <h3>{person.name}</h3>
+        </div>
+      ))}
+
+      {isOverlayOpen && selectedPerson && (
+        <PersonDetailsOverlay person={selectedPerson} onClose={closeOverlay} />
+      )}
     </div>
   );
 };

@@ -1,15 +1,13 @@
-import { configureStore } from "@reduxjs/toolkit";
-import searchReducer from "./slices/searchSlice";
-import { starWarsApi } from "../starWarsApi";
+import { configureStore } from '@reduxjs/toolkit'
+import searchReducer from "./slices/searchSlice"; 
 
 export const store = configureStore({
   reducer: {
     search: searchReducer,
-    [starWarsApi.reducerPath]: starWarsApi.reducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(starWarsApi.middleware),
-});
+  }
+})
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch

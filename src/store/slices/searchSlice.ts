@@ -5,11 +5,15 @@ import { IPeople } from "../../api";
 interface SearchState {
   searchTerm: string;
   people: IPeople[];
+  selectedPerson: IPeople | null;
+  isOverlayOpen: boolean;
 }
 
 const initialState: SearchState = {
   searchTerm: "",
   people: [],
+  selectedPerson: null,
+  isOverlayOpen: false,
 };
 
 export const searchSlice = createSlice({
@@ -22,9 +26,15 @@ export const searchSlice = createSlice({
     setPeople: (state, action: PayloadAction<IPeople[]>) => {
       state.people = action.payload;
     },
+    setSelectedPerson: (state, action: PayloadAction<IPeople | null>) => {
+      state.selectedPerson = action.payload;
+    },
+    toggleOverlay: (state) => {
+      state.isOverlayOpen = !state.isOverlayOpen;
+    },
   },
 });
 
-export const { setSearchTerm, setPeople } = searchSlice.actions;
+export const { setSearchTerm, setPeople, setSelectedPerson, toggleOverlay } = searchSlice.actions;
 
 export default searchSlice.reducer;
