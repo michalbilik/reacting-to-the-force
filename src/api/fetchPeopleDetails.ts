@@ -12,9 +12,11 @@ export const fetchPeopleDetails = async (
   person: IPeople
 ): Promise<IPeopleDetails> => {
   const homeworldName = await fetchHomeworldName(person.homeworld);
-  const filmTitles = await fetchFilmTitles(person.films);
-  const starshipNames = await fetchStarshipNames(person.starships);
-  const vehicleNames = await fetchVehicleNames(person.vehicles);
+  const [filmTitles, starshipNames, vehicleNames] = await Promise.all([
+    fetchFilmTitles(person.films),
+    fetchStarshipNames(person.starships),
+    fetchVehicleNames(person.vehicles),
+  ]);
 
   return {
     homeworldName,
@@ -36,8 +38,8 @@ const fetchHomeworldName = async (homeworldUrl: string): Promise<string> => {
 
 const fetchFilmTitles = async (filmUrls: string[]): Promise<string[]> => {
   try {
-    const filmRequests = filmUrls.map((filmUrl) => axios.get(filmUrl));
-    const responses = await Promise.all(filmRequests);
+    const requests = filmUrls.map((filmUrl) => axios.get(filmUrl));
+    const responses = await axios.all(requests);
     const titles = responses.map((response) => response.data.title);
     return titles;
   } catch (error) {
@@ -50,10 +52,8 @@ const fetchStarshipNames = async (
   starshipUrls: string[]
 ): Promise<string[]> => {
   try {
-    const starshipRequests = starshipUrls.map((starshipUrl) =>
-      axios.get(starshipUrl)
-    );
-    const responses = await Promise.all(starshipRequests);
+    const requests = starshipUrls.map((starshipUrl) => axios.get(starshipUrl));
+    const responses = await axios.all(requests);
     const names = responses.map((response) => response.data.name);
     return names;
   } catch (error) {
@@ -64,10 +64,8 @@ const fetchStarshipNames = async (
 
 const fetchVehicleNames = async (vehicleUrls: string[]): Promise<string[]> => {
   try {
-    const vehicleRequests = vehicleUrls.map((vehicleUrl) =>
-      axios.get(vehicleUrl)
-    );
-    const responses = await Promise.all(vehicleRequests);
+    const requests = vehicleUrls.map((vehicleUrl) => axios.get(vehicleUrl));
+    const responses = await axios.all(requests);
     const names = responses.map((response) => response.data.name);
     return names;
   } catch (error) {

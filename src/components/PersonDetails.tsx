@@ -1,19 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../store/hooks";
 import { IPeople } from "../api/api";
-import { useNavigate } from "react-router-dom";
+import { fetchPeopleDetails, IPeopleDetails } from "../api/fetchPeopleDetails";
 
 const PersonDetails: React.FC = () => {
-  const selectedPerson: IPeople | null = useAppSelector(
-    (state) => state.search.selectedPerson
+  const { name } = useParams();
+  const selectedPerson: IPeople | undefined = useAppSelector(
+    (state) =>
+      state.search.people.find(
+        (person) => person.name.toLowerCase() === name.toLowerCase()
+      )
   );
   const navigate = useNavigate();
+  const [peopleDetails, setPeopleDetails] = useState<IPeopleDetails | null>(
+    null
+  );
 
   const goBack = () => {
     navigate(-1);
   };
 
-  if (!selectedPerson) {
+  useEffect(() => {
+    const fetchDetails = async () => {
+      if (!selectedPerson) {
+        return;
+      }
+      const details = await fetchPeopleDetails(selectedPerson);
+      setPeopleDetails(details);
+    };
+    fetchDetails();
+  }, [selectedPerson]);
+
+  if (!selectedPerson || !peopleDetails) {
     return <div>No person selected</div>;
   }
 
@@ -21,10 +40,10 @@ const PersonDetails: React.FC = () => {
     <div>
       <h2>{selectedPerson.name}</h2>
       <p>Birth year: {selectedPerson.birth_year}</p>
-      <p>Homeworld: {selectedPerson.homeworld}</p>
-      <p>Movies: {selectedPerson.films}</p>
-      <p>Starships: {selectedPerson.starships}</p>
-      <p>Vehicles: {selectedPerson.vehicles}</p>
+      <p>Homeworld: {peopleDetails.homeworldName}</p>
+      <p>Movies: {peopleDetails.filmTitles.join(", ")}</p>
+      <p>Starships: {peopleDetails.starshipNames.join(", ")}</p>
+      <p>Vehicles: {peopleDetails.vehicleNames.join(", ")}</p>
 
       <button
         onClick={goBack}
