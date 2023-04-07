@@ -1,68 +1,47 @@
+// src/components/PersonDetails.tsx
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppSelector } from "../store/hooks";
-import { IPeople } from "../api/api";
-import { fetchPeopleDetails, IPeopleDetails } from "../api/fetchPeopleDetails";
+import { useGetPersonDetailsQuery } from "../api/starWarsApi";
 
 const PersonDetails: React.FC = () => {
-  const { name } = useParams<{ name: string | undefined }>();
-  const selectedPerson: IPeople | undefined = useAppSelector((state) =>
-    state.search.people.find(
-      (person) => person.name.toLowerCase() === name?.toLowerCase()
-    )
-  );
+  const { name } = useParams();
+  const { data: personDetails, isLoading } = useGetPersonDetailsQuery(name);
   const navigate = useNavigate();
-  const [peopleDetails, setPeopleDetails] = useState<IPeopleDetails | null>(
-    null
-  );
-  const [loading, setLoading] = useState<boolean>(true);
 
   const goBack = () => {
     navigate(-1);
   };
 
-  useEffect(() => {
-    const fetchDetails = async () => {
-      if (!selectedPerson) {
-        return;
-      }
-      setLoading(true);
-      const details = await fetchPeopleDetails(selectedPerson);
-      setPeopleDetails(details);
-      setLoading(false);
-    };
-    fetchDetails();
-  }, [selectedPerson]);
-
-  if (loading) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!selectedPerson || !peopleDetails) {
+  if (!personDetails) {
     return <div>No person selected</div>;
   }
 
   return (
     <div>
-      <h2>{selectedPerson.name}</h2>
-      <p>Birth year: {selectedPerson.birth_year}</p>
-      <p>Homeworld: {peopleDetails.homeworldName ?? "Unknown"}</p>
+      <h2>{personDetails.name}</h2>
+      <p>Birth year: {personDetails.birth_year}</p>
+      <p>Homeworld: {personDetails.homeworldName ?? "Unknown"}</p>
       <p>
+        {" "}
         Movies:{" "}
-        {peopleDetails.filmTitles.length > 0
-          ? peopleDetails.filmTitles.join(", ")
+        {personDetails.filmTitles.length > 0
+          ? personDetails.filmTitles.join(", ")
           : "Unknown"}
       </p>
       <p>
         Starships:{" "}
-        {peopleDetails.starshipNames.length > 0
-          ? peopleDetails.starshipNames.join(", ")
+        {personDetails.starshipNames.length > 0
+          ? personDetails.starshipNames.join(", ")
           : "Unknown"}
       </p>
       <p>
         Vehicles:{" "}
-        {peopleDetails.vehicleNames.length > 0
-          ? peopleDetails.vehicleNames.join(", ")
+        {personDetails.vehicleNames.length > 0
+          ? personDetails.vehicleNames.join(", ")
           : "Unknown"}
       </p>
 

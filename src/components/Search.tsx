@@ -1,38 +1,25 @@
-import React, { useCallback, useState } from "react";
-import { useAppSelector, useAppDispatch } from "./../store/hooks";
-import {
-  setSearchTerm,
-  setPeople,
-  setSelectedPerson,
-} from "./../store/slices/searchSlice";
-import { fetchPerson, IPeople } from "../api/api";
+// src/components/Search.tsx
+import React, { useState } from "react";
+import { useGetPeopleByNameQuery } from "../api/starWarsApi";
 import { useNavigate } from "react-router-dom";
+import { IPeople } from "../api/starWarsApi";
 
 const Search = () => {
-  const searchTerm = useAppSelector((state) => state.search.searchTerm);
-  const people = useAppSelector((state) => state.search.people);
-  const dispatch = useAppDispatch();
+  const [searchTerm, setSearchTerm] = useState("");
+  const { data, error, isLoading } = useGetPeopleByNameQuery(searchTerm, {
+    skip: searchTerm.trim() === "",
+  });
+
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSearch = useCallback(async () => {
-    if (searchTerm.trim() === "") return;
-
-    setIsLoading(true);
-    const fetchedPeople = await fetchPerson(searchTerm);
-    setIsLoading(false);
-    dispatch(setPeople(fetchedPeople));
-  }, [searchTerm, dispatch]);
-
-  const handlePersonClick = (person: IPeople) => {
-    dispatch(setSelectedPerson(person));
-    navigate(`/person/${person.name}`);
+  const handleSearch = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      setSearchTerm((e.target as HTMLInputElement).value);
+    }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
+  const handlePersonClick = (name: string) => {
+    navigate(`/person/${name}`);
   };
 
   return (
@@ -42,27 +29,23 @@ const Search = () => {
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => dispatch(setSearchTerm(e.target.value))}
-            onKeyDown={handleKeyPress}
+            onChange={(e) =>
+              setSearchTerm((e.target as HTMLInputElement).value)
+            }
+            onKeyDown={handleSearch}
             placeholder="Search..."
             className="w-full p-2 rounded-l"
           />
-          <button
-            onClick={handleSearch}
-            className="px-4 py-2 text-white bg-blue-500 rounded-r hover:bg-blue-600"
-          >
-            Search
-          </button>
         </div>
       </div>
 
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        people.map((person) => (
+        data?.results.map((person: IPeople) => (
           <div
             key={person.name}
-            onClick={() => handlePersonClick(person)}
+            onClick={() => handlePersonClick(person.name)}
             className="cursor-pointer"
           >
             <h3>{person.name}</h3>

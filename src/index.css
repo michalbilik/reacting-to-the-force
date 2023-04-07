@@ -1,9 +1,12 @@
+@import url(https://allfont.net/allfont.css?fonts=star-jedi);
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Star Jedi", Inter, system-ui, Avenir, Helvetica, Arial,
+    sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -25,9 +28,8 @@ body {
   min-height: 100vh;
   justify-content: center;
   align-items: center;
+  background: #000 url(//cssanimation.rocks/demo/starwars/images/bg.jpg);
 }
-
-
 
 @media (prefers-color-scheme: light) {
   :root {
