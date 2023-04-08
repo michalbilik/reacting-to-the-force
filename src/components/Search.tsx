@@ -1,4 +1,3 @@
-// src/components/Search.tsx
 import React, { useState } from "react";
 import { useGetPeopleByNameQuery } from "../api/starWarsApi";
 import { useNavigate } from "react-router-dom";
@@ -18,14 +17,14 @@ const Search = () => {
     }
   };
 
-  const handlePersonClick = (name: string) => {
-    navigate(`/person/${name}`);
+  const handlePersonClick = (person:IPeople) => {
+    navigate(`/person/${person.name}`, { state: {person} });
   };
 
   return (
     <div className="flex flex-col items-center space-y-4">
       <div className="w-full max-w-md">
-        <div className="flex items-center border border-gray-300 rounded">
+        <div className="flex items-center border border-yellow-300 rounded">
           <input
             type="text"
             value={searchTerm}
@@ -45,7 +44,7 @@ const Search = () => {
         data?.results.map((person: IPeople) => (
           <div
             key={person.name}
-            onClick={() => handlePersonClick(person.name)}
+            onClick={() => handlePersonClick(person)}
             className="cursor-pointer"
           >
             <h3>{person.name}</h3>

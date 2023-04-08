@@ -7,6 +7,7 @@ export interface IPeople {
   name: string;
   starships: string[];
   vehicles: string[];
+  url: string;
 }
 
 export interface IPeopleResponse {
@@ -20,11 +21,9 @@ export const starWarsApi = createApi({
     getPeopleByName: builder.query<IPeopleResponse, string>({
       query: (name) => `people/?search=${name}`,
     }),
-    getPersonDetails: builder.query({
-      query: (url) => url.replace("https://swapi.dev/api/", ""),
-    }),
   }),
 });
 
-export const { useGetPeopleByNameQuery, useGetPersonDetailsQuery } =
-  starWarsApi;
+export const {
+  useGetPeopleByNameQuery,
+} = starWarsApi;
