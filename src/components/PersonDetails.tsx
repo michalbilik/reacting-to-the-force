@@ -73,7 +73,7 @@ const PersonDetails = () => {
           <img
             src={imageUrl}
             alt={person.name}
-            className="h-[] w-full object-cover"
+            className="h-[450px] w-[300px] object-cover"
           />
         </div>
         <div className="p-8">
