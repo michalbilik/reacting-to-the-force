@@ -6,8 +6,10 @@ import {
   useGetStarshipQuery,
 } from "../api/starWarsApi";
 import Loading from "./Loading";
+import { useState, useEffect } from "react";
 
 const PersonDetails = () => {
+  const [timeoutExceeded, setTimeoutExceeded] = useState(false);
   const { state } = useLocation();
   const person = state.person;
 
@@ -18,6 +20,16 @@ const PersonDetails = () => {
     const match = url.match(/\/api\/people\/(\d+)/);
     return match ? match[1] : null;
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTimeoutExceeded(true);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   const personId = getPersonId(person.url);
   const imageUrl = `https://starwarsapibucket.s3.eu-central-1.amazonaws.com/${personId}.jpg`;
@@ -72,16 +84,38 @@ const PersonDetails = () => {
           <p className="text-gray-400 mb-2">Height: {person.height} cm</p>
           <p className="text-gray-400 mb-2">Mass: {person.mass} kg</p>
           <div className="text-gray-400 mb-2">
-            Homeworld: {homeworldData?.name || <Loading />}
+            Homeworld:{" "}
+            {homeworldData?.name || (timeoutExceeded ? "Unknown" : <Loading />)}
           </div>
           <div className="text-gray-400 mb-2">
-            Films: {films.length ? films.join(", ") : <Loading />}
+            Films:{" "}
+            {films.length ? (
+              films.join(", ")
+            ) : timeoutExceeded ? (
+              "Unknown"
+            ) : (
+              <Loading />
+            )}
           </div>
           <div className="text-gray-400 mb-2">
-            Vehicles: {vehicles.length ? vehicles.join(", ") : <Loading />}
+            Vehicles:{" "}
+            {vehicles.length ? (
+              vehicles.join(", ")
+            ) : timeoutExceeded ? (
+              "Unknown"
+            ) : (
+              <Loading />
+            )}
           </div>
           <div className="text-gray-400 mb-2">
-            Starships: {starships.length ? starships.join(", ") : <Loading />}
+            Starships:{" "}
+            {starships.length ? (
+              starships.join(", ")
+            ) : timeoutExceeded ? (
+              "Unknown"
+            ) : (
+              <Loading />
+            )}
           </div>
         </div>
       </div>
