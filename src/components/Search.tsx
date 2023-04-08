@@ -17,8 +17,12 @@ const Search = () => {
     }
   };
 
-  const handlePersonClick = (person:IPeople) => {
-    navigate(`/person/${person.name}`, { state: {person} });
+  const handlePersonClick = (person: IPeople) => {
+    navigate(`/person/${person.name}`, { state: { person } });
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
   };
 
   return (
@@ -28,9 +32,7 @@ const Search = () => {
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) =>
-              setSearchTerm((e.target as HTMLInputElement).value)
-            }
+            onChange={handleInputChange}
             onKeyDown={handleSearch}
             placeholder="Search..."
             className="w-full p-2 rounded-l"

@@ -5,6 +5,10 @@ const PersonDetails = () => {
   const { state } = useLocation();
   const person = state.person;
 
+  if (!person) {
+    return <div>Person not found</div>;
+  }
+
   return (
     <div>
       <h2>{person.name}</h2>
@@ -14,6 +18,12 @@ const PersonDetails = () => {
       <p>Hair color: {person.hair_color}</p>
       <p>Skin color: {person.skin_color}</p>
       <p>Eye color: {person.eye_color}</p>
+      <p>Gender: {person.gender}</p>
+      <p>Homeworld: {person.homeworld}</p>
+      <p>Films: {person.films.join(", ")}</p>
+      <p>Species: {person.species.join(", ")}</p>
+      <p>Vehicles: {person.vehicles.join(", ")}</p>
+      <p>Starships: {person.starships.join(", ")}</p>
     </div>
   );
 };
