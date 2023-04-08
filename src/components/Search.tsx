@@ -32,7 +32,7 @@ const Search = () => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-4">
+    <div className="flex flex-col items-center space-y-4 text-cyan-500">
       <div className="w-full max-w-md">
         <div className="flex items-center border border-yellow-300 rounded">
           <input
@@ -40,7 +40,7 @@ const Search = () => {
             value={searchValue}
             onChange={handleInputChange}
             placeholder="Search..."
-            className="w-full p-2 rounded-l"
+            className="w-full p-2 rounded-l bg-transparent"
           />
         </div>
       </div>
