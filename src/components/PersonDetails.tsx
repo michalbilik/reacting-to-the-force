@@ -55,13 +55,13 @@ const PersonDetails = () => {
     .filter(Boolean);
 
   return (
-    <div className="bg-black shadow-lg rounded-lg overflow-hidden w-full mx-auto mb-4">
+    <div className="bg-black opacity-90 shadow-lg rounded-lg overflow-hidden w-full mx-auto mb-4">
       <div className="flex">
         <div className="flex-shrink-0">
           <img
             src={imageUrl}
             alt={person.name}
-            className="h-full w-full object-cover"
+            className="h-[] w-full object-cover"
           />
         </div>
         <div className="p-8">
