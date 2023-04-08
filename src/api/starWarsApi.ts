@@ -30,7 +30,29 @@ export const starWarsApi = createApi({
     getPeopleByName: builder.query<IPeopleResponse, string>({
       query: (name) => `people/?search=${name}`,
     }),
+    getPlanet: builder.query<any, string>({
+      query: (id) => `planets/${id}`,
+    }),
+    getFilm: builder.query<any, string>({
+      query: (id) => `films/${id}`,
+    }),
+    getSpecies: builder.query<any, string>({
+      query: (id) => `species/${id}`,
+    }),
+    getVehicle: builder.query<any, string>({
+      query: (id) => `vehicles/${id}`,
+    }),
+    getStarship: builder.query<any, string>({
+      query: (id) => `starships/${id}`,
+    }),
   }),
 });
 
-export const { useGetPeopleByNameQuery } = starWarsApi;
+export const {
+  useGetPeopleByNameQuery,
+  useGetPlanetQuery,
+  useGetFilmQuery,
+  useGetSpeciesQuery,
+  useGetVehicleQuery,
+  useGetStarshipQuery,
+} = starWarsApi;
