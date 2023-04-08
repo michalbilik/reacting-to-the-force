@@ -1,28 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useGetPeopleByNameQuery } from "../api/starWarsApi";
 import { useNavigate } from "react-router-dom";
 import { IPeople } from "../api/starWarsApi";
+import Loading from "./Loading";
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchValue, setSearchValue] = useState("");
   const { data, error, isLoading } = useGetPeopleByNameQuery(searchTerm, {
     skip: searchTerm.trim() === "",
   });
 
   const navigate = useNavigate();
 
-  const handleSearch = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      setSearchTerm((e.target as HTMLInputElement).value);
-    }
-  };
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setSearchTerm(searchValue);
+    }, 500);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [searchValue]);
 
   const handlePersonClick = (person: IPeople) => {
     navigate(`/person/${person.name}`, { state: { person } });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+    setSearchValue(e.target.value);
   };
 
   return (
@@ -31,9 +37,8 @@ const Search = () => {
         <div className="flex items-center border border-yellow-300 rounded">
           <input
             type="text"
-            value={searchTerm}
+            value={searchValue}
             onChange={handleInputChange}
-            onKeyDown={handleSearch}
             placeholder="Search..."
             className="w-full p-2 rounded-l"
           />
@@ -41,7 +46,9 @@ const Search = () => {
       </div>
 
       {isLoading ? (
-        <div>Loading...</div>
+        <Loading />
+      ) : data?.results.length === 0 ? (
+        <div>No results found.</div>
       ) : (
         data?.results.map((person: IPeople) => (
           <div

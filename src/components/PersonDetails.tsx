@@ -7,6 +7,7 @@ import {
   useGetVehicleQuery,
   useGetStarshipQuery,
 } from "../api/starWarsApi";
+import Loading from "./Loading";
 
 const PersonDetails = () => {
   const { state } = useLocation();
@@ -54,10 +55,10 @@ const PersonDetails = () => {
       <p>Birth year: {person.birth_year}</p>
       <p>Height: {person.height} cm</p>
       <p>Mass: {person.mass} kg</p>
-      <p>Homeworld: {homeworldData?.name || "Loading..."}</p>
-      <p>Films: {films.length ? films.join(", ") : "Loading..."}</p>
-      <p>Vehicles: {vehicles.length ? vehicles.join(", ") : "Loading..."}</p>
-      <p>Starships: {starships.length ? starships.join(", ") : "Loading..."}</p>
+      <div>Homeworld: {homeworldData?.name || <Loading />}</div>
+      <div>Films: {films.length ? films.join(", ") : <Loading />}</div>
+      <div>Vehicles: {vehicles.length ? vehicles.join(", ") : <Loading />}</div>
+      <div>Starships: {starships.length ? starships.join(", ") : <Loading />}</div>
     </div>
   );
 };
