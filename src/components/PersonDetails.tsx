@@ -14,6 +14,13 @@ const PersonDetails = () => {
   if (!person) {
     return <div>Person not found</div>;
   }
+  const getPersonId = (url: string) => {
+    const match = url.match(/\/api\/people\/(\d+)/);
+    return match ? match[1] : null;
+  };
+
+  const personId = getPersonId(person.url);
+  const imageUrl = `https://starwarsapibucket.s3.eu-central-1.amazonaws.com/${personId}.jpg`;
 
   // Homeworld
   const homeworldId = person.homeworld.split("/").slice(-2, -1)[0];
@@ -48,15 +55,36 @@ const PersonDetails = () => {
     .filter(Boolean);
 
   return (
-    <div>
-      <h2>{person.name}</h2>
-      <p>Birth year: {person.birth_year}</p>
-      <p>Height: {person.height} cm</p>
-      <p>Mass: {person.mass} kg</p>
-      <div>Homeworld: {homeworldData?.name || <Loading />}</div>
-      <div>Films: {films.length ? films.join(", ") : <Loading />}</div>
-      <div>Vehicles: {vehicles.length ? vehicles.join(", ") : <Loading />}</div>
-      <div>Starships: {starships.length ? starships.join(", ") : <Loading />}</div>
+    <div className="bg-black shadow-lg rounded-lg overflow-hidden w-full mx-auto mb-4">
+      <div className="flex">
+        <div className="flex-shrink-0">
+          <img
+            src={imageUrl}
+            alt={person.name}
+            className="h-full w-full object-cover"
+          />
+        </div>
+        <div className="p-8">
+          <h2 className="text-3xl font-bold text-gray-100 mb-4">
+            {person.name}
+          </h2>
+          <p className="text-gray-400 mb-2">Birth year: {person.birth_year}</p>
+          <p className="text-gray-400 mb-2">Height: {person.height} cm</p>
+          <p className="text-gray-400 mb-2">Mass: {person.mass} kg</p>
+          <div className="text-gray-400 mb-2">
+            Homeworld: {homeworldData?.name || <Loading />}
+          </div>
+          <div className="text-gray-400 mb-2">
+            Films: {films.length ? films.join(", ") : <Loading />}
+          </div>
+          <div className="text-gray-400 mb-2">
+            Vehicles: {vehicles.length ? vehicles.join(", ") : <Loading />}
+          </div>
+          <div className="text-gray-400 mb-2">
+            Starships: {starships.length ? starships.join(", ") : <Loading />}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
