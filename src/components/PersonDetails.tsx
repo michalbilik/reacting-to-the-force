@@ -16,8 +16,46 @@ const PersonDetails = () => {
     return <div>Person not found</div>;
   }
 
+  // Homeworld
   const homeworldId = person.homeworld.split("/").slice(-2, -1)[0];
   const { data: homeworldData } = useGetPlanetQuery(homeworldId);
+  // Films
+  const filmIds = person.films.map(
+    (film: string) => film.split("/").slice(-2, -1)[0]
+  );
+  const filmQueries = filmIds.map((id: string) => useGetFilmQuery(id));
+  const films = filmQueries
+    .map((query: ReturnType<typeof useGetFilmQuery>) => query.data?.title)
+    .filter(Boolean);
+
+  // Species
+  const speciesIds = person.species.map(
+    (specie: string) => specie.split("/").slice(-2, -1)[0]
+  );
+  const speciesQueries = speciesIds.map((id: string) => useGetSpeciesQuery(id));
+  const species = speciesQueries
+    .map((query: ReturnType<typeof useGetSpeciesQuery>) => query.data?.name)
+    .filter(Boolean);
+
+  // Vehicles
+  const vehicleIds = person.vehicles.map(
+    (vehicle: string) => vehicle.split("/").slice(-2, -1)[0]
+  );
+  const vehicleQueries = vehicleIds.map((id: string) => useGetVehicleQuery(id));
+  const vehicles = vehicleQueries
+    .map((query: ReturnType<typeof useGetVehicleQuery>) => query.data?.name)
+    .filter(Boolean);
+
+  // Starships
+  const starshipIds = person.starships.map(
+    (starship: string) => starship.split("/").slice(-2, -1)[0]
+  );
+  const starshipQueries = starshipIds.map((id: string) =>
+    useGetStarshipQuery(id)
+  );
+  const starships = starshipQueries
+    .map((query: ReturnType<typeof useGetStarshipQuery>) => query.data?.name)
+    .filter(Boolean);
 
   return (
     <div>
@@ -29,12 +67,11 @@ const PersonDetails = () => {
       <p>Skin color: {person.skin_color}</p>
       <p>Eye color: {person.eye_color}</p>
       <p>Gender: {person.gender}</p>
-      <p>Homeworld: {person.homeworld}</p>
       <p>Homeworld: {homeworldData?.name || "Loading..."}</p>
-      <p>Films: {person.films.join(", ")}</p>
-      <p>Species: {person.species.join(", ")}</p>
-      <p>Vehicles: {person.vehicles.join(", ")}</p>
-      <p>Starships: {person.starships.join(", ")}</p>
+      <p>Films: {films.length ? films.join(", ") : "Loading..."}</p>
+      <p>Species: {species.length ? species.join(", ") : "Loading..."}</p>
+      <p>Vehicles: {vehicles.length ? vehicles.join(", ") : "Loading..."}</p>
+      <p>Starships: {starships.length ? starships.join(", ") : "Loading..."}</p>
     </div>
   );
 };
