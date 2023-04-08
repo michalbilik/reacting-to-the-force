@@ -25,7 +25,7 @@ body {
   min-height: 100vh;
   justify-content: center;
   align-items: center;
-  background: #000 url(//cssanimation.rocks/demo/starwars/images/bg.jpg);
+  /* background: #000 url(//cssanimation.rocks/demo/starwars/images/bg.jpg); */
 }
 
 @media (prefers-color-scheme: light) {
