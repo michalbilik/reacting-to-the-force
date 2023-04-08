@@ -1,9 +1,7 @@
 import { useLocation } from "react-router-dom";
-import { IPeople } from "../api/starWarsApi";
 import {
   useGetPlanetQuery,
   useGetFilmQuery,
-  useGetSpeciesQuery,
   useGetVehicleQuery,
   useGetStarshipQuery,
 } from "../api/starWarsApi";
