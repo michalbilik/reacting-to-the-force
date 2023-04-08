@@ -28,15 +28,6 @@ const PersonDetails = () => {
     .map((query: ReturnType<typeof useGetFilmQuery>) => query.data?.title)
     .filter(Boolean);
 
-  // Species
-  const speciesIds = person.species.map(
-    (specie: string) => specie.split("/").slice(-2, -1)[0]
-  );
-  const speciesQueries = speciesIds.map((id: string) => useGetSpeciesQuery(id));
-  const species = speciesQueries
-    .map((query: ReturnType<typeof useGetSpeciesQuery>) => query.data?.name)
-    .filter(Boolean);
-
   // Vehicles
   const vehicleIds = person.vehicles.map(
     (vehicle: string) => vehicle.split("/").slice(-2, -1)[0]
@@ -63,13 +54,8 @@ const PersonDetails = () => {
       <p>Birth year: {person.birth_year}</p>
       <p>Height: {person.height} cm</p>
       <p>Mass: {person.mass} kg</p>
-      <p>Hair color: {person.hair_color}</p>
-      <p>Skin color: {person.skin_color}</p>
-      <p>Eye color: {person.eye_color}</p>
-      <p>Gender: {person.gender}</p>
       <p>Homeworld: {homeworldData?.name || "Loading..."}</p>
       <p>Films: {films.length ? films.join(", ") : "Loading..."}</p>
-      <p>Species: {species.length ? species.join(", ") : "Loading..."}</p>
       <p>Vehicles: {vehicles.length ? vehicles.join(", ") : "Loading..."}</p>
       <p>Starships: {starships.length ? starships.join(", ") : "Loading..."}</p>
     </div>
