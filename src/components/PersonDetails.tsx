@@ -66,16 +66,16 @@ const PersonDetails = () => {
 
   return (
     <div className="bg-black opacity-90 shadow-lg rounded-lg overflow-hidden w-full mx-auto mb-4">
-      <div className="flex">
+      <div className="flex flex-col md:flex-row">
         <div className="flex-shrink-0">
           <img
             src={imageUrl}
             alt={person.name}
-            className="h-[450px] w-[300px] object-cover"
+            className="h-[450px] md:h-[450px] w-full md:w-[300px] object-cover"
           />
         </div>
-        <div className="p-8">
-          <h2 className="text-3xl font-bold text-gray-100 mb-4">
+        <div className="p-4 md:p-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-100 mb-4">
             {person.name}
           </h2>
           <p className="text-gray-400 mb-2">Birth year: {person.birth_year}</p>
