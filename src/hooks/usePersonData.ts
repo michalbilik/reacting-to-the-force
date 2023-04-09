@@ -8,7 +8,8 @@ import {
 export const usePersonData = (person: any) => {
   // Homeworld
   const homeworldId = person.homeworld.split("/").slice(-2, -1)[0];
-  const { data: homeworldData } = useGetPlanetQuery(homeworldId);
+  const { data: homeworldData, isLoading: isLoadingHomeworld } =
+    useGetPlanetQuery(homeworldId);
 
   // Films
   const filmIds = person.films.map(
@@ -18,6 +19,9 @@ export const usePersonData = (person: any) => {
   const films = filmQueries
     .map((query: ReturnType<typeof useGetFilmQuery>) => query.data?.title)
     .filter(Boolean);
+  const isLoadingFilms = filmQueries.some(
+    (query: ReturnType<typeof useGetFilmQuery>) => query.isLoading
+  );
 
   // Vehicles
   const vehicleIds = person.vehicles.map(
@@ -27,6 +31,9 @@ export const usePersonData = (person: any) => {
   const vehicles = vehicleQueries
     .map((query: ReturnType<typeof useGetVehicleQuery>) => query.data?.name)
     .filter(Boolean);
+  const isLoadingVehicles = vehicleQueries.some(
+    (query: ReturnType<typeof useGetVehicleQuery>) => query.isLoading
+  );
 
   // Starships
   const starshipIds = person.starships.map(
@@ -38,11 +45,18 @@ export const usePersonData = (person: any) => {
   const starships = starshipQueries
     .map((query: ReturnType<typeof useGetStarshipQuery>) => query.data?.name)
     .filter(Boolean);
+  const isLoadingStarships = starshipQueries.some(
+    (query: ReturnType<typeof useGetStarshipQuery>) => query.isLoading
+  );
 
   return {
     homeworldData,
     films,
     vehicles,
     starships,
+    isLoadingHomeworld,
+    isLoadingFilms,
+    isLoadingVehicles,
+    isLoadingStarships,
   };
 };

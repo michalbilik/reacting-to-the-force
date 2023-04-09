@@ -10,19 +10,18 @@ const PersonDetails = () => {
   const navigate = useNavigate();
 
   const person = state.person;
-  const { homeworldData, films, vehicles, starships } = usePersonData(person);
+  const {
+    homeworldData,
+    films,
+    vehicles,
+    starships,
+    isLoadingHomeworld,
+    isLoadingFilms,
+    isLoadingVehicles,
+    isLoadingStarships,
+  } = usePersonData(person);
   const personId = getIdFromUrl(person.url, "people");
   const imageUrl = `https://starwarsapibucket.s3.eu-central-1.amazonaws.com/${personId}.jpg`;
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setTimeoutExceeded(true);
-    }, 3000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
 
   const handleBackToSearch = () => {
     navigate("/");
@@ -47,23 +46,19 @@ const PersonDetails = () => {
           <h2 className="text-2xl md:text-3xl font-bold text-yellow-400 mb-4">
             {person.name}
           </h2>
-          <p className="text-gray-400 mb-2">
-            <span className="text-yellow-400">Birth year:</span>{" "}
-            {person.birth_year}
-          </p>
-          <p className="text-gray-400 mb-2">
-            <span className="text-yellow-400">Height:</span> {person.height} cm
-          </p>
-          <p className="text-gray-400 mb-2">
-            <span className="text-yellow-400">Mass:</span> {person.mass} kg
-          </p>
           <div className="text-gray-400 mb-2">
             <span className="text-yellow-400">Homeworld:</span>{" "}
-            {homeworldData?.name || (timeoutExceeded ? "Unknown" : <Loading />)}
+            {isLoadingHomeworld ? (
+              <Loading />
+            ) : (
+              homeworldData?.name || "Unknown"
+            )}
           </div>
           <div className="text-gray-400 mb-2">
             <p className="mb-1 text-yellow-400">Movies:</p>
-            {films.length ? (
+            {isLoadingFilms ? (
+              <Loading />
+            ) : films.length ? (
               <ul className="list-disc list-inside">
                 {films.map((film: string, index: number) => (
                   <li key={index} className="text-gray-400">
@@ -71,30 +66,28 @@ const PersonDetails = () => {
                   </li>
                 ))}
               </ul>
-            ) : timeoutExceeded ? (
-              "Unknown"
             ) : (
-              <Loading />
+              "Unknown"
             )}
           </div>
           <div className="text-gray-400 mb-2">
             <span className="text-yellow-400">Vehicles:</span>{" "}
-            {vehicles.length ? (
-              vehicles.join(", ")
-            ) : timeoutExceeded ? (
-              "Unknown"
-            ) : (
+            {isLoadingVehicles ? (
               <Loading />
+            ) : vehicles.length ? (
+              vehicles.join(", ")
+            ) : (
+              "Unknown"
             )}
           </div>
           <div className="text-gray-400 mb-2">
             <span className="text-yellow-400">Starships:</span>{" "}
-            {starships.length ? (
-              starships.join(", ")
-            ) : timeoutExceeded ? (
-              "Unknown"
-            ) : (
+            {isLoadingStarships ? (
               <Loading />
+            ) : starships.length ? (
+              starships.join(", ")
+            ) : (
+              "Unknown"
             )}
           </div>
           <button
