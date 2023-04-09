@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   useGetPlanetQuery,
   useGetFilmQuery,
@@ -12,13 +12,11 @@ import { getIdFromUrl } from "../helpers/getIdFromUrl";
 const PersonDetails = () => {
   const [timeoutExceeded, setTimeoutExceeded] = useState(false);
   const { state } = useLocation();
+  const navigate = useNavigate();
+
   const person = state.person;
-
-  if (!person) {
-    return <div>Person not found</div>;
-  }
-
   const personId = getIdFromUrl(person.url, "people");
+  const imageUrl = `https://starwarsapibucket.s3.eu-central-1.amazonaws.com/${personId}.jpg`;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -30,7 +28,9 @@ const PersonDetails = () => {
     };
   }, []);
 
-  const imageUrl = `https://starwarsapibucket.s3.eu-central-1.amazonaws.com/${personId}.jpg`;
+  const handleBackToSearch = () => {
+    navigate("/");
+  };
 
   // Homeworld
   const homeworldId = person.homeworld.split("/").slice(-2, -1)[0];
@@ -64,6 +64,10 @@ const PersonDetails = () => {
     .map((query: ReturnType<typeof useGetStarshipQuery>) => query.data?.name)
     .filter(Boolean);
 
+  if (!person) {
+    return <div>Person not found</div>;
+  }
+
   return (
     <div className="bg-black opacity-90 shadow-lg rounded-lg overflow-hidden w-full mx-auto mb-4">
       <div className="flex flex-col md:flex-row">
@@ -75,7 +79,7 @@ const PersonDetails = () => {
           />
         </div>
         <div className="p-4 md:p-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-100 mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-yellow-400 mb-4">
             {person.name}
           </h2>
           <p className="text-gray-400 mb-2">Birth year: {person.birth_year}</p>
@@ -115,6 +119,12 @@ const PersonDetails = () => {
               <Loading />
             )}
           </div>
+          <button
+            onClick={handleBackToSearch}
+            className="bg-black opacity-90 text-cyan-500 px-4 py-2 rounded m-4 shadow-lg hover:bg-opacity-100 transition duration-200 ease-in-out border-2 border-yellow-300 spin"
+            >
+            Go Back
+          </button>
         </div>
       </div>
     </div>
