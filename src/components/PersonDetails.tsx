@@ -7,6 +7,7 @@ import {
 } from "../api/starWarsApi";
 import Loading from "./Loading";
 import { useState, useEffect } from "react";
+import { getIdFromUrl } from "../helpers/getIdFromUrl";
 
 const PersonDetails = () => {
   const [timeoutExceeded, setTimeoutExceeded] = useState(false);
@@ -16,10 +17,8 @@ const PersonDetails = () => {
   if (!person) {
     return <div>Person not found</div>;
   }
-  const getPersonId = (url: string) => {
-    const match = url.match(/\/api\/people\/(\d+)/);
-    return match ? match[1] : null;
-  };
+
+  const personId = getIdFromUrl(person.url, "people");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -31,7 +30,6 @@ const PersonDetails = () => {
     };
   }, []);
 
-  const personId = getPersonId(person.url);
   const imageUrl = `https://starwarsapibucket.s3.eu-central-1.amazonaws.com/${personId}.jpg`;
 
   // Homeworld
