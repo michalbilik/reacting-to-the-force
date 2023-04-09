@@ -71,11 +71,12 @@ const PersonDetails = () => {
   return (
     <div className="bg-black opacity-90 shadow-lg rounded-lg overflow-hidden w-full mx-auto mb-4 min-h-[450px]">
       <div className="flex flex-col md:flex-row">
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 p-4">
           <img
             src={imageUrl}
             alt={person.name}
-            className="h-[450px] md:h-full w-full md:w-full object-cover"
+            className="h-[350px] md:h-full w-full md:w-full object-contain"
+            loading="lazy"
           />
         </div>
         <div className="p-4 md:p-8">
