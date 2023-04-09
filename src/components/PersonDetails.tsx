@@ -69,13 +69,13 @@ const PersonDetails = () => {
   }
 
   return (
-    <div className="bg-black opacity-90 shadow-lg rounded-lg overflow-hidden w-full mx-auto mb-4">
+    <div className="bg-black opacity-90 shadow-lg rounded-lg overflow-hidden w-full mx-auto mb-4 min-h-[450px]">
       <div className="flex flex-col md:flex-row">
         <div className="flex-shrink-0">
           <img
             src={imageUrl}
             alt={person.name}
-            className="h-[450px] md:h-[450px] w-full md:w-[300px] object-cover"
+            className="h-[450px] md:h-full w-full md:w-full object-cover"
           />
         </div>
         <div className="p-4 md:p-8">
@@ -90,9 +90,15 @@ const PersonDetails = () => {
             {homeworldData?.name || (timeoutExceeded ? "Unknown" : <Loading />)}
           </div>
           <div className="text-gray-400 mb-2">
-            Films:{" "}
+            <p className="mb-1">Movies:</p>
             {films.length ? (
-              films.join(", ")
+              <ul className="list-disc list-inside">
+                {films.map((film: string, index: number) => (
+                  <li key={index} className="text-gray-400">
+                    {film}
+                  </li>
+                ))}
+              </ul>
             ) : timeoutExceeded ? (
               "Unknown"
             ) : (
