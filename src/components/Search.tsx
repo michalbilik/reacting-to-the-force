@@ -8,6 +8,7 @@ import Loading from "./Loading";
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchValue, setSearchValue] = useState("");
+  const [searchChanged, setSearchChanged] = useState(false);
   const { data, error, isLoading } = useGetPeopleByNameQuery(searchTerm, {
     skip: searchTerm.trim() === "",
   });
@@ -18,7 +19,14 @@ const Search = () => {
 
   useEffect(() => {
     setSearchTerm(debouncedSearchValue);
+    setSearchChanged(true);
   }, [debouncedSearchValue]);
+
+  useEffect(() => {
+    if (data) {
+      setSearchChanged(false);
+    }
+  }, [data]);
 
   const handlePersonClick = (person: IPeople) => {
     navigate(`/person/${person.name}`, { state: { person } });
@@ -42,7 +50,7 @@ const Search = () => {
         </div>
       </div>
 
-      {isLoading ? (
+      {(searchChanged && searchValue !== "") || isLoading ? (
         <Loading />
       ) : data?.results.length === 0 ? (
         <div>No results found.</div>
