@@ -25,13 +25,12 @@ body {
   min-height: 100vh;
   justify-content: center;
   align-items: center;
-  /* background: #000 url(//cssanimation.rocks/demo/starwars/images/bg.jpg); */
+  cursor: url("http://www.rw-designer.com/cursor-view/67012-48.png") 16 16, auto;
 }
 
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
   }
   a:hover {
     color: #747bff;
