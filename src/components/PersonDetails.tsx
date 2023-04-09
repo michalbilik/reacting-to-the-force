@@ -121,8 +121,8 @@ const PersonDetails = () => {
           </div>
           <button
             onClick={handleBackToSearch}
-            className="bg-black opacity-90 text-cyan-500 px-4 py-2 rounded m-4 shadow-lg hover:bg-opacity-100 transition duration-200 ease-in-out border-2 border-yellow-300 spin"
-            >
+            className="bg-black opacity-90 text-cyan-500 p-2 rounded border border-transparent hover:border-yellow-500"
+          >
             Go Back
           </button>
         </div>
