@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useGetPeopleByNameQuery } from "../api/starWarsApi";
 import { useNavigate } from "react-router-dom";
 import { IPeople } from "../api/starWarsApi";
+import { useDebounce } from "../hooks/useDebounce";
 import Loading from "./Loading";
 
 const Search = () => {
@@ -13,15 +14,11 @@ const Search = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setSearchTerm(searchValue);
-    }, 500);
+  const debouncedSearchValue = useDebounce(searchValue, 500);
 
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [searchValue]);
+  useEffect(() => {
+    setSearchTerm(debouncedSearchValue);
+  }, [debouncedSearchValue]);
 
   const handlePersonClick = (person: IPeople) => {
     navigate(`/person/${person.name}`, { state: { person } });
