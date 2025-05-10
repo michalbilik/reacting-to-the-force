@@ -25,7 +25,7 @@ export interface IPeopleResponse {
 
 export const starWarsApi = createApi({
   reducerPath: "starWarsApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "https://swapi.dev/api/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "https://swapi.info/api/" }),
   endpoints: (builder) => ({
     getPeopleByName: builder.query<IPeopleResponse, string>({
       query: (name) => `people/?search=${name}`,

@@ -1,32 +1,56 @@
 import React, { useState, useEffect } from "react";
-import { useGetPeopleByNameQuery } from "../api/starWarsApi";
 import { useNavigate } from "react-router-dom";
 import { IPeople } from "../api/starWarsApi";
 import { useDebounce } from "../hooks/useDebounce";
 import Loading from "./Loading";
 
 const Search = () => {
-  const [searchTerm, setSearchTerm] = useState("");
   const [searchValue, setSearchValue] = useState("");
-  const [searchChanged, setSearchChanged] = useState(false);
-  const { data, error, isLoading } = useGetPeopleByNameQuery(searchTerm, {
-    skip: searchTerm.trim() === "",
-  });
+  const [allCharacters, setAllCharacters] = useState<IPeople[] | null>(null);
+  const [filteredData, setFilteredData] = useState<IPeople[] | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
-
   const debouncedSearchValue = useDebounce(searchValue, 500);
 
+  // Fetch all characters once when component mounts
   useEffect(() => {
-    setSearchTerm(debouncedSearchValue);
-    setSearchChanged(true);
-  }, [debouncedSearchValue]);
+    const fetchAllCharacters = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch('https://swapi.info/api/people');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setAllCharacters(data);
+        setIsLoading(false);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+        setIsLoading(false);
+      }
+    };
 
+    fetchAllCharacters();
+  }, []);
+
+  // Filter characters based on search input (minimum 3 characters)
   useEffect(() => {
-    if (data) {
-      setSearchChanged(false);
+    if (!allCharacters) return;
+
+    if (debouncedSearchValue.trim().length < 3) {
+      setFilteredData(null);
+      return;
     }
-  }, [data]);
+
+    const searchTerm = debouncedSearchValue.toLowerCase();
+    const filtered = allCharacters.filter(character =>
+      character.name.toLowerCase().includes(searchTerm)
+    );
+    setFilteredData(filtered);
+  }, [debouncedSearchValue, allCharacters]);
 
   const handlePersonClick = (person: IPeople) => {
     navigate(`/person/${person.name}`, { state: { person } });
@@ -44,18 +68,23 @@ const Search = () => {
             type="text"
             value={searchValue}
             onChange={handleInputChange}
-            placeholder="Search..."
             className="w-full p-2 rounded-l bg-transparent"
+            placeholder="Search character"
           />
         </div>
       </div>
 
-      {(searchChanged && searchValue !== "") || isLoading ? (
+      {isLoading ? (
         <Loading />
-      ) : data?.results.length === 0 ? (
+      ) : error ? (
+        <div>Error: {error}</div>
+      ) : searchValue.trim().length < 3 ? (
+        <div>Enter at least 3 characters to search...</div>
+
+      ) : filteredData && filteredData.length === 0 ? (
         <div>No results found.</div>
       ) : (
-        data?.results.map((person: IPeople) => (
+        filteredData?.map((person: IPeople) => (
           <div
             key={person.name}
             onClick={() => handlePersonClick(person)}
